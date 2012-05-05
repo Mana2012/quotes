@@ -1,9 +1,7 @@
 
 
-require 'rack'  
 class WebApp
   def call(env)
-    [200, {}, ['Hola Mundo']]
+    [200, {'Content-Type' => "text/plain"}, ['Hola Rackup']]
   end
 end
-Rack::Handler::WEBrick.run(WebApp.new, Port: 3000)
