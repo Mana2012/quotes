@@ -3,6 +3,7 @@
 require 'securerandom'
 module Models
   class Quote
+  
     attr_accessor :author, :content, :language
     attr_reader :id
 

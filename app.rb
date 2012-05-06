@@ -1,32 +1,18 @@
 
 
-require './models'
+require 'rack'
+require './controllers'
+
 class WebApp
+  
+  include Controllers
+
   def call(env)
-    method = env["REQUEST_METHOD"]
-    path   = env["REQUEST_PATH"]
 
-    collection_pattern = /\/quotes$/
-    member_pattern     = /\/quotes\/([a-z0-9\-]+)/
-
-    status, body = case method
-      when "GET"
-        if path =~ collection_pattern
-          [200, Models::Quote.all.map(&:as_text).join("\n")]
-        elsif path =~ member_pattern
-          id = path.match(member_pattern)[1]
-          quote = Models::Quote.find(id)
-          if quote
-            [200, quote.as_text]
-          else
-            [404, ""]
-          end
-        else
-          [501, "Not Implemented"]
-        end
-      else
-        [405, ""]
-      end
+    request = Rack::Request.new(env)
+    controller = QuotesController.new
+    
+    status, body = controller.dispatch(request)
 
     [
      status,
